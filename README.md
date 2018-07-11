@@ -6,24 +6,23 @@ An Python class, together with a "driver" code, meant as an example of making au
 - [Python 3][python] interpreter, together with the "devel" counterpart
 - [gmp][gmp] GNU Multi Precision Arithmetic Library, together with the "devel" counterpart
 - [pip3][pip] package manager
-- [fastecdsa][fastecdsa] library for creating Elliptic Curve signatures
+- [ecdsa][ecdsa] library for creating Elliptic Curve signatures
 - [websocket-client][ws-client] library for WebSocket support
 
 [python]:https://www.python.org/
 [gmp]:https://gmplib.org/
 [pip]:https://pip.pypa.io/en/stable/
-[fastecdsa]:https://pypi.org/project/fastecdsa/
+[ecdsa]:https://pypi.org/project/ecdsa/
 [ws-client]:https://pypi.org/project/websocket-client/
 
 ## Preparation
 In major Linux distributions, packages `Python 3` and `pip3` either are already installed, or can be installed using the distribution-specific package manager.
 Package `pip` works **only** with `Python 2`, to install prerequisites for `Python 3`, `pip3` is required.
 While the client uses the following list of imports: `base64`, `hashlib`, `json`, `random`, `ssl`, `threading`, `time`, these are usually installed during `Python 3` installation.
-Installing `fastecdsa` library requires `gmp` header files and a working C compiler to be present - installation details are, again, distribution-specific.
 
-To install `websocket-client` and `fastecdsa` libraries, run
+To install `websocket-client` and `ecdsa` libraries, run
 ```
-pip3 install websocket-client fastecdsa
+pip3 install websocket-client ecdsa
 ```
 with appropriate privileges.
 

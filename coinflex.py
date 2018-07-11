@@ -6,8 +6,9 @@ import threading
 import time
 import websocket
 
-from fastecdsa import _ecdsa
-from fastecdsa import curve
+from ecdsa import ellipticcurve
+from ecdsa import curves
+from ecdsa import SigningKey
 from hashlib import sha224
 
 Assets = {
@@ -44,6 +45,32 @@ Assets = {
 }
 
 class WSClient(websocket.WebSocketApp):
+    # Certicom secp224k1 support
+    secp224k1_instance = None
+    @classmethod
+    def secp224k1(klass):
+        if WSClient.secp224k1_instance is None:
+            _a  = 0x0000000000000000000000000000000000000000000000000000000000
+            _b  = 0x0000000000000000000000000000000000000000000000000000000005
+            _p  = 0x00fffffffffffffffffffffffffffffffffffffffffffffffeffffe56d
+            _Gx = 0x00a1455b334df099df30fc28a169a467e9e47075a90f7e650eb6b7a45c
+            _Gy = 0x007e089fed7fba344282cafbd6f7e319f7c0b0bd59e2ca4bdb556d61a5
+            _r  = 0x010000000000000000000000000001dce8d2ec6184caf0a971769fb1f7
+    
+            curve_secp224k1 = ellipticcurve.CurveFp(_p, _a, _b)
+            generator_secp224k1 = ellipticcurve.Point(curve_secp224k1, _Gx, _Gy, _r)
+    
+            WSClient.secp224k1_instance = curves.Curve(
+                    "SECP224k1",
+                    curve_secp224k1,
+                    generator_secp224k1,
+                    (1, 3, 132, 0, 20),
+                    "secp256k1"
+                )
+    
+        return WSClient.secp224k1_instance
+
+
     def __init__(self, url,
             msg_handler     = None,
             err_handler     = None,
@@ -231,29 +258,23 @@ class WSClient(websocket.WebSocketApp):
 
             user_bytes = int(self.user_id).to_bytes(8, "big")
 
+            message = b"".join([user_bytes, self.server_nonce, self.client_nonce])
+
             key = b"".join([user_bytes, self.passphrase])
             key_hash = sha224(key).digest()
-            priv_key = int.from_bytes(key_hash, "big", signed = False)
+            exponent = int.from_bytes(key_hash, "big", signed = False)
 
-            message = b"".join([user_bytes, self.server_nonce, self.client_nonce])
-            message_hash = sha224(message).hexdigest()
+            secp224k1 = WSClient.secp224k1()
+            priv_key = SigningKey.from_secret_exponent(exponent, curve = secp224k1, hashfunc = sha224)
 
-            secp224k1 = curve.secp224k1
-            r, s = _ecdsa.sign(
-                    message_hash,
-                    str(priv_key),
-                    str(ecdsa_nonce),
-                    str(secp224k1.p),
-                    str(secp224k1.a),
-                    str(secp224k1.b),
-                    str(secp224k1.q),
-                    str(secp224k1.gx),
-                    str(secp224k1.gy),
+            r, s = priv_key.sign_deterministic(message, hashfunc = sha224,
+                    sigencode = lambda r, s, order: (r, s)
                 )
-            r = int(r).to_bytes(28, "big")
-            s = int(s).to_bytes(28, "big")
+            r = r.to_bytes(28, "big")
+            s = s.to_bytes(28, "big")
             r = base64.b64encode(r).decode()
             s = base64.b64encode(s).decode()
+
             return r, s
 
         except ValueError:

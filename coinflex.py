@@ -1,16 +1,14 @@
-#!/usr/bin/env python3
-
-from fastecdsa import _ecdsa, curve, ecdsa, keys
-from hashlib import sha224
-
 import base64
 import json
 import random
 import ssl
-import sys
 import threading
 import time
 import websocket
+
+from fastecdsa import _ecdsa
+from fastecdsa import curve
+from hashlib import sha224
 
 Assets = {
     "XBT"      : 63488,
@@ -45,7 +43,7 @@ Assets = {
     "USDDEC18" : 51851
 }
 
-class CoinflexWSS(websocket.WebSocketApp):
+class WSClient(websocket.WebSocketApp):
     def __init__(self, url,
             msg_handler     = None,
             err_handler     = None,
@@ -53,7 +51,7 @@ class CoinflexWSS(websocket.WebSocketApp):
             close_handler   = None,
             ping_handler    = None,
             pong_handler    = None,
-            self_signed     = False,
+            insecure_ssl    = False,
             socket_timeout  = 5
         ):
 
@@ -68,7 +66,7 @@ class CoinflexWSS(websocket.WebSocketApp):
         self.server_nonce   = None
         self.client_nonce   = None
         self.socket_timeout = socket_timeout
-        self.self_signed    = self_signed
+        self.insecure_ssl   = insecure_ssl
 
         self.open_handler   = open_handler
         self.msg_handler    = msg_handler
@@ -192,7 +190,7 @@ class CoinflexWSS(websocket.WebSocketApp):
                 "ping_interval": 45,
                 "ping_timeout": self.socket_timeout
             }
-        if self.self_signed:
+        if self.insecure_ssl:
             options["sslopt"] = {"cert_reqs": ssl.CERT_NONE}
         worker = threading.Thread(target = lambda:
                 self.run_forever(**options)
@@ -235,8 +233,7 @@ class CoinflexWSS(websocket.WebSocketApp):
 
             key = b"".join([user_bytes, self.passphrase])
             key_hash = sha224(key).digest()
-            #priv_key = int.from_bytes(key_hash, "big", signed = True)
-            priv_key = int.from_bytes(key_hash, "big")
+            priv_key = int.from_bytes(key_hash, "big", signed = False)
 
             message = b"".join([user_bytes, self.server_nonce, self.client_nonce])
             message_hash = sha224(message).hexdigest()
@@ -343,47 +340,4 @@ class CoinflexWSS(websocket.WebSocketApp):
     def WatchTicker(self, **data):
         data["method"] = "WatchTicker"
         self.send(data)
-
-
-def test_drive():
-    if len(sys.argv) < 2:
-        print("Usage: coinflexClient.py ws[s]://<host>[:<port>]")
-        return -1
-
-    def print_out(ws, msg):
-        print("%s: %s"%(time.time(), msg))
-
-    coinflex = CoinflexWSS(
-            sys.argv[1],
-            #self_signed   = True,
-            #ping_handler = print_out,
-            #pong_handler = print_out,
-            msg_handler   = print_out
-        )
-
-    #coinflex.set_auth_data(<core_id>, <cookie>, <passphrase>)
-
-    coinflex.WatchOrders(
-            base    = Assets["XBT"],
-            counter = Assets["USD"],
-            watch   = True
-        )
-    coinflex.WatchTicker(
-            base    = Assets["XBT"],
-            counter = Assets["USD"],
-            watch   = True
-        )
-
-    try:
-        while True:
-            time.sleep(3)
-            coinflex.GetBalances()
-
-    except KeyboardInterrupt:
-        coinflex.stop()
-
-
-
-if __name__ == "__main__":
-    test_drive()
 

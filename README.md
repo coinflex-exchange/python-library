@@ -17,8 +17,9 @@ An Python class, together with a "driver" code, meant as an example of making au
 
 ## Preparation
 In major Linux distributions, packages `Python 3` and `pip3` either are already installed, or can be installed using the distribution-specific package manager.
-Package `pip` works **only** with `Python 2`, to install prerequisites for `Python 3`, `pip3` is required.
-While the client uses the following list of imports: `base64`, `hashlib`, `json`, `random`, `ssl`, `threading`, `time`, these are usually installed during `Python 3` installation.
+Package `pip` works **only** with `Python 2`, to install pip packages for `Python 3`, `pip3` tool needs to be used.
+On Windows, `pip3` package manager comes installed as a part of the standard `Python 3` [release.](https://www.python.org/downloads/windows/)
+The client also imports the following: `base64`, `hashlib`, `json`, `random`, `ssl`, `threading`, `time`. All of these; however, come together with a `Python 3` installation, and are merely enumerated here.
 
 To install `websocket-client` and `ecdsa` libraries, run
 ```

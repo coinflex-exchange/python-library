@@ -23,7 +23,7 @@ The client also imports the following: `base64`, `hashlib`, `json`, `random`, `s
 
 To install `websocket-client` and `ecdsa` libraries, run
 ```
-pip3 install [--user] websocket-client ecdsa
+pip3 install [--user] "websocket-client<0.49.0" ecdsa
 ```
 with appropriate privileges.
 

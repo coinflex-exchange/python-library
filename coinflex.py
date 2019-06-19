@@ -5,44 +5,23 @@ import ssl
 import threading
 import time
 import websocket
+import urllib.request
 
 from ecdsa import ellipticcurve
 from ecdsa import curves
 from ecdsa import SigningKey
 from hashlib import sha224
 
-Assets = {
-    "XBT"      : 63488,
-    "BCH"      : 63496,
-    "EUR"      : 64000,
-    "GBP"      : 64032,
-    "USD"      : 64128,
-    "PLN"      : 64936,
-    "XBTJAN18" : 51200,
-    "USDJAN18" : 51840,
-    "XBTFEB18" : 51201,
-    "USDFEB18" : 51841,
-    "XBTMAR18" : 51202,
-    "USDMAR18" : 51842,
-    "XBTAPR18" : 51203,
-    "USDAPR18" : 51843,
-    "XBTMAY18" : 51204,
-    "USDMAY18" : 51844,
-    "XBTJUN18" : 51205,
-    "USDJUN18" : 51845,
-    "XBTJUL18" : 51206,
-    "USDJUL18" : 51846,
-    "XBTAUG18" : 51207,
-    "USDAUG18" : 51847,
-    "XBTSEP18" : 51208,
-    "USDSEP18" : 51848,
-    "XBTOCT18" : 51209,
-    "USDOCT18" : 51849,
-    "XBTNOV18" : 51210,
-    "USDNOV18" : 51850,
-    "XBTDEC18" : 51211,
-    "USDDEC18" : 51851
-}
+# Connects to the CoinFLEX /assets/ REST endpoint to retrieve the asset ID's
+Assets = {}
+Scales = {}
+
+with urllib.request.urlopen("https://webapi.coinflex.com/assets/") as response:
+    asset_list=json.loads(response.read().decode())
+for item in asset_list:
+    Assets[item["name"]] = item["id"]
+    Scales[item["name"]] = item["scale"]
+
 
 class WSClient(websocket.WebSocketApp):
     # Certicom secp224k1 support
@@ -322,43 +301,38 @@ class WSClient(websocket.WebSocketApp):
         data["method"] = "GetBalances"
         self.send(data)
 
-
     def GetOrders(self, **data):
         data["method"] = "GetOrders"
         self.send(data)
-
 
     def EstimateMarketOrder(self, **data):
         data["method"] = "EstimateMarketOrder"
         self.send(data)
 
-
     def PlaceOrder(self, **data):
         data["method"] = "PlaceOrder"
         self.send(data)
-
 
     def CancelOrder(self, **data):
         data["method"] = "CancelOrder"
         self.send(data)
 
-
     def CancelAllOrders(self, **data):
         data["method"] = "CancelAllOrders"
         self.send(data)
-
 
     def GetTradeVolume(self, **data):
         data["method"] = "GetTradeVolume"
         self.send(data)
 
-
     def WatchOrders(self, **data):
         data["method"] = "WatchOrders"
         self.send(data)
-
 
     def WatchTicker(self, **data):
         data["method"] = "WatchTicker"
         self.send(data)
 
+    def ModifyOrder(self, **data):
+        data["method"] = "ModifyOrder"
+        self.send(data)

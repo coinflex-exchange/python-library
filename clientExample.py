@@ -34,6 +34,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
+#Full list of asset string names can be found here: https://github.com/coinflex-exchange/API/blob/master/SCALE.md
 def test_drive(args):
     def print_out(ws, msg):
         print("%s: %s"%(time.time(), msg))
@@ -43,15 +44,21 @@ def test_drive(args):
             insecure_ssl  = args.insecure,
             msg_handler   = print_out
         )
-
+    
+    #Change the base and counter asset string names to point to the desired order book
+    #To see all available order books please refer to the CoinFLEX /markets/ REST endpoint https://webapi.coinflex.com/markets/
+    #See below for examples of subscribing to the "WatchOrders" and "WatchTicker" feed 
+    #For all available commands please refer to the documentation here https://github.com/coinflex-exchange/API/blob/master/WEBSOCKET-README.md
+    
     coinflex.WatchOrders(
             base    = Assets["XBT"],
-            counter = Assets["USD"],
+            counter = Assets["USDT"],
             watch   = True
         )
+
     coinflex.WatchTicker(
-            base    = Assets["XBT"],
-            counter = Assets["USD"],
+            base    = Assets["ETHJUN"],
+            counter = Assets["USDTJUN"],
             watch   = True
         )
 
@@ -72,4 +79,4 @@ def test_drive(args):
 if __name__ == "__main__":
     args = parse_arguments()
     test_drive(args)
-
+    

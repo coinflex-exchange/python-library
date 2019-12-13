@@ -12,7 +12,7 @@ Using these interfaces it is possible to make both authenticated and unauthentic
 
 Here we provide examples of how to connect to each of these APIs using Python.
 
-## Websocket API Client
+## Websocket API
 Its worth mentioning that there are several different apporaches to creating a Python Websocket client with different examples submitted here to help clients get connected.
 
 * Method 1 - Uses [websocket-client][ws-client]

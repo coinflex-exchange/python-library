@@ -5,7 +5,7 @@ import ssl
 import threading
 import time
 import websocket
-import urllib.request
+import requests
 
 from ecdsa import ellipticcurve
 from ecdsa import curves
@@ -13,11 +13,10 @@ from ecdsa import SigningKey
 from hashlib import sha224
 
 # Connects to the CoinFLEX /assets/ REST endpoint to retrieve the asset ID's
+response = requests.get(url="https://webapi.coinflex.com/assets/",headers={'Content-type': 'application/x-www-form-urlencoded'})
+asset_list = response.json()
 Assets = {}
 Scales = {}
-
-with urllib.request.urlopen("https://webapi.coinflex.com/assets/") as response:
-    asset_list=json.loads(response.read().decode())
 for item in asset_list:
     Assets[item["name"]] = item["id"]
     Scales[item["name"]] = item["scale"]

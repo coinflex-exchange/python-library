@@ -9,8 +9,7 @@ class args:
     phrase=''                                     #this is password for your CoinFLEX account found in API Details
     
 #Authentication
-auth=str(args.id)+"/"+args.cookie
-string=auth+':'+args.phrase
+string=str(args.id)+"/"+args.cookie+':'+args.phrase
 bytes=base64.b64encode(string.encode())
 auth=bytes.decode()
 headers = {'authorization': 'Basic ' + auth, 'Content-type': 'application/x-www-form-urlencoded'}

@@ -95,6 +95,7 @@ async def subscribe():
     global ws
     async with websockets.connect(args.url) as ws:  
         while True:
+            #If there's a websocket disconnection then this will attempt a re-connection
             if not ws.open: 
                 ws = await websockets.connect(args.url)
             try:

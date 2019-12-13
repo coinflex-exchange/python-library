@@ -21,3 +21,8 @@ Its worth mentioning that there are several different apporaches to creating a P
 [ws-client]:https://pypi.org/project/websocket-client/
 [websockets]:https://pypi.org/project/websockets/
 [asyncio]:https://pypi.org/project/asyncio/
+[sse-client]:https://pypi.org/project/aiohttp-sse-client/
+[cflex-ws-method2]:https://github.com/coinflex-exchange/python-library/tree/master/Websocket%20API%20(Method%202)
+
+## Event Stream API
+Current example shown here uses [aiohttp-sse-client][sse-client], primarily becasue it has full asyncio support meaning this approach can be combined with [Websocket - Method 2][cflex-ws-method2] allowing clients to maintain two CoinFLEX data streams in parrallel, (1) from an Event Stream and (2) from a websocket.

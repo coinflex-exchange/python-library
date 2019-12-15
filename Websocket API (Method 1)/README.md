@@ -1,5 +1,5 @@
 
-# CoinFLEX Python Client
+# CoinFLEX Python Websocket Client - Method 1
 An Python class, together with a "driver" code, meant as an example of making authenticated calls to CoinFLEX's [WebSocket API.](https://bitbucket.org/coinflex/api/src/master/WEBSOCKET-README.md)
 
 ## Prerequisites

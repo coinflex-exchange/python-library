@@ -29,3 +29,26 @@ Executing
 [<path>/]main.py
 ```
 will output the websocket messages and other debug info.
+
+## Details
+The main part of the client is a `CoinFLEXWebsocket` class, which is initalised with the WebSocket endpoint's URL, the ticker you want to subscribe to, and the optional user credentials (user id, api cookie and the passphrase of your account).
+
+There are couples of methods in the client related to our API, including
+```
+get_instrument
+get_ticker
+funds
+positions
+market_depth
+open_orders
+recent_trades
+estimate_market_order
+place_order
+cancel_order
+cancel_all_orders
+get_trade_volume
+```
+
+The connection is made as soon as the client is initiated, and meanwhile subscribing to the realtime data for the ticker. The authentication data are sent the first time non-public method is being called.
+
+The client also defines an `Assets` dictionary, which contains mappings between asset names and their codes.

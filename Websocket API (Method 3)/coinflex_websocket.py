@@ -6,7 +6,6 @@ import json
 import random
 import logging
 import requests
-import urllib.request
 import time
 import ssl
 import base64

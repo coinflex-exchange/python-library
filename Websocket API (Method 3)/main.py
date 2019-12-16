@@ -20,9 +20,9 @@ def run():
             logger.info("Funds: %s" % ws.funds())
             logger.info("Trade Volume: %s\n\n" % ws.get_trade_volume(asset=Assets['XBTDEC']))
             # logger.info("Place Order: %s\n\n" % ws.place_order(quantity=-10, price=75000000))
-
+            # logger.info("Recent Trades: %s\n\n" % ws.recent_trades())
+            
         logger.info("Market Depth: %s" % ws.market_depth())
-        logger.info("Recent Trades: %s\n\n" % ws.recent_trades())
         sleep(10)
 
 

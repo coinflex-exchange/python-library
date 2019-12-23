@@ -17,6 +17,7 @@ Its worth mentioning that there are several different apporaches to creating a P
 
 * Method 1 - Uses [websocket-client][ws-client]
 * Method 2 - Uses [asyncio][asyncio] in conjunction with [websockets][websockets]
+* Method 3 - User submitted sample code
 
 [ws-client]:https://pypi.org/project/websocket-client/
 [websockets]:https://pypi.org/project/websockets/

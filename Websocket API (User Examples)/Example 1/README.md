@@ -1,3 +1,3 @@
-# CoinFLEX Websocket API User Examples
+# placeholder
 
-Sample Python scripts submitted by users showing different approaches to integrating with CoinFLEX's websocket API.
+placeholder
